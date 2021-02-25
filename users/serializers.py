@@ -6,21 +6,18 @@ from django.contrib.auth import authenticate
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    """
+    '''
     Creates a new user.
     Email, username, and password are required.
     Returns a JSON web token.
-    """
+    '''
 
-    # The password must be validated and should not be read by the client
     password = serializers.CharField(
         max_length=128,
         min_length=8,
         write_only=True,
     )
 
-    # The client should not be able to send a token along with a registration
-    # request. Making `token` read-only handles that for us.
     token = serializers.CharField(max_length=255, read_only=True)
 
     class Meta:
@@ -32,22 +29,21 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    """
+    '''
     Authenticates an existing user.
     Email and password are required.
     Returns a JSON web token.
-    """
+    '''
     email = serializers.EmailField(write_only=True)
     password = serializers.CharField(max_length=128, write_only=True)
 
-    # Ignore these fields if they are included in the request.
     username = serializers.CharField(max_length=255, read_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
 
     def validate(self, data):
-        """
+        '''
         Validates user data.
-        """
+        '''
         email = data.get('email', None)
         password = data.get('password', None)
 
@@ -87,8 +83,6 @@ class UserPasswordChangeSerializer(serializers.Serializer):
     confirmed_password = serializers.CharField(required=True, max_length=30)
 
     def validate(self, data):
-        # add here additional check for password strength if needed
-        # self.context['re'].u
         if not self.context['data'].user.check_password(data.get('old_password')):
             raise serializers.ValidationError({'old_password': 'Wrong password.'})
 
@@ -107,5 +101,4 @@ class UserPasswordChangeSerializer(serializers.Serializer):
 
     @property
     def data(self):
-        # just return success dictionary. you can change this to your need, but i dont think output should be user data after password change
         return {'Success': True}

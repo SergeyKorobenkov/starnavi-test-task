@@ -14,18 +14,18 @@ from .serializers import UserPasswordChangeSerializer
 
 
 class RegistrationAPIView(APIView):
-    """
+    '''
     Registers a new user.
-    """
+    '''
     permission_classes = [AllowAny]
     serializer_class = RegistrationSerializer
 
     def post(self, request):
-        """
+        '''
         Creates a new User object.
         Username, email, and password are required.
         Returns a JSON web token.
-        """
+        '''
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -39,29 +39,27 @@ class RegistrationAPIView(APIView):
 
 
 class LoginAPIView(APIView):
-    """
+    '''
     Logs in an existing user.
-    """
+    '''
     permission_classes = [AllowAny]
     serializer_class = LoginSerializer
 
     def post(self, request):
-        """
+        '''
         Checks is user exists.
         Email and password are required.
         Returns a JSON web token.
-        """
+        '''
         serializer = self.serializer_class(data=request.data)
-        print('here')
         serializer.is_valid(raise_exception=True)
-        print('and here')
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UpdatePassword(APIView):
-    """
+    '''
     An endpoint for changing password.
-    """
+    '''
     permission_classes = (IsAuthenticated, )
 
     def put(self, request):
